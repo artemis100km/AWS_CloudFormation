@@ -7,7 +7,8 @@ Resources:
       CidrBlock: 10.0.0.0/16
       Tags:
       - Key: Name
-        Value: VPC02
+        Value: VPC01
+
   subnetName:
     Type: AWS::EC2::Subnet
     Properties:
