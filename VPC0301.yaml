@@ -1,0 +1,24 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Sample VPC0301
+Resources:
+
+#------------------VOC------------------
+  VPC01:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.0.0.0/16  
+      Tags:
+      - Key: Name
+        Value: VPC01
+        
+#------------------Subnet------------------
+  PublicSubnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: 'ap-northeast-1a'
+      VpcId:
+        Ref: VPC01                              # Full name function syntax_Ref: logicalName
+      CidrBlock: 10.0.0.0/24
+      Tags:
+        - Key: Name
+          Value: PublicSubnet
