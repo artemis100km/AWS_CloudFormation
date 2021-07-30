@@ -1,15 +1,15 @@
 AWSTemplateFormatVersion: "2010-09-09"
-Description: Sample VPC0601
+Description: Sample CfnVPC0601
 Resources:
 
 #--------------------VPCの設定--------------------
-  VPC01:
+  CfnVPC01:                           #CloudFormation →略語 Cfn
     Type: AWS::EC2::VPC
     Properties:
       CidrBlock: 10.0.0.0/16  
       Tags:
       - Key: Name
-        Value: VPC01
+        Value: CfnVPC01
 
 #--------------------サブネットを定義--------------------
 # パブリックサブネット_1の設定
@@ -21,7 +21,7 @@ Resources:
           - 0
           - Fn::GetAZs: !Ref 'AWS::Region'
       VpcId:
-        Ref: VPC01
+        Ref: CfnVPC01
       CidrBlock: 10.0.0.0/24
       MapPublicIpOnLaunch: true
       Tags:
@@ -37,12 +37,12 @@ Resources:
           - 1
           - Fn::GetAZs: !Ref 'AWS::Region'
       VpcId:
-        Ref: VPC01
+        Ref: CfnVPC01
       CidrBlock: 10.0.1.0/24
       MapPublicIpOnLaunch: true
       Tags:
         - Key: Name
-          Value: PublicSubnet2
+          Value: PublicSubnet_2
 
 # プライベートサブネット_1の設定
   PrivateSubnet1:
@@ -53,7 +53,7 @@ Resources:
           - 0
           - Fn::GetAZs: !Ref 'AWS::Region'
       VpcId:
-        Ref:  VPC01
+        Ref:  CfnVPC01
       CidrBlock: 10.0.2.0/24
       Tags:
         - Key: Name
@@ -68,7 +68,7 @@ Resources:
           - 1
           - Fn::GetAZs: !Ref 'AWS::Region'
       VpcId:
-        Ref:  VPC01
+        Ref:  CfnVPC01
       CidrBlock: 10.0.3.0/24
       Tags:
         - Key: Name
@@ -76,21 +76,21 @@ Resources:
 
 #--------------------インターネットGWの設定--------------------
 # インターネットGWの設定
-  VPC01IGW:
+  CfnVPC01IGW:
     Type: AWS::EC2::InternetGateway
     Properties:
       Tags:
         - Key: Name
-          Value: VPC01_IGW
+          Value: CfnVPC01_IGW
 
 # インターネットGWをVPC01にアタッチ
-  IGWAttachment:
+  CfnVPV01IGWAttachment:
     Type: AWS::EC2::VPCGatewayAttachment
     Properties:
       VpcId:
-        Ref: VPC01
+        Ref: CfnVPC01
       InternetGatewayId:
-        Ref: VPC01IGW
+        Ref: CfnVPC01IGW
 
 #--------------------ルートテーブルの設定--------------------
 #ルートテーブルを定義
@@ -98,7 +98,7 @@ Resources:
     Type: AWS::EC2::RouteTable
     Properties :
       VpcId:
-        Ref: VPC01
+        Ref: CfnVPC01
       Tags: 
         - Key: Name
           Value: RouteTablePublicFromCF
@@ -111,7 +111,7 @@ Resources:
         Ref: PubSubRoute
       DestinationCidrBlock: 0.0.0.0/0
       GatewayId:
-        Ref: VPC01IGW
+        Ref: CfnVPC01IGW
 
 #ルートテーブルとパブリックサブネット_1を関連付け
   PubSub1RouteTableAssociation:
