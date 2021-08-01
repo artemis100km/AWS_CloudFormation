@@ -1,9 +1,9 @@
 AWSTemplateFormatVersion: "2010-09-09"
-Description: Sample CfnVPC0601
+Description: Sample CfnVPC01
 Resources:
 
-#--------------------VPCの設定--------------------
-  CfnVPC01:                           #CloudFormation →略語 Cfn
+#--------------------VPC Configuration--------------------
+  CfnVPC01:
     Type: AWS::EC2::VPC
     Properties:
       CidrBlock: 10.0.0.0/16  
@@ -11,8 +11,8 @@ Resources:
       - Key: Name
         Value: CfnVPC01
 
-#--------------------サブネットを定義--------------------
-# パブリックサブネット_1の設定
+#--------------------Subnet Configuration--------------------
+#PublicSubnet_1 Configuration
   PublicSubnet1:
     Type: AWS::EC2::Subnet
     Properties:
@@ -28,7 +28,7 @@ Resources:
         - Key: Name
           Value: PublicSubnet_1
 
-# パブリックサブネット_2の設定
+#PublicSubnet_2 Configuration
   PublicSubnet2:
     Type: AWS::EC2::Subnet
     Properties:
@@ -44,7 +44,7 @@ Resources:
         - Key: Name
           Value: PublicSubnet_2
 
-# プライベートサブネット_1の設定
+#PrivateSubnet_1 Configuration
   PrivateSubnet1:
     Type: AWS::EC2::Subnet
     Properties:
@@ -59,7 +59,7 @@ Resources:
         - Key: Name
           Value: PrivateSubnet_1
 
-# プライベートサブネット_2の設定
+#PrivateSubnet_2 Configuration
   PrivateSubnet2:
     Type: AWS::EC2::Subnet
     Properties:
@@ -74,8 +74,8 @@ Resources:
         - Key: Name
           Value: PrivateSubnet_2
 
-#--------------------インターネットGWの設定--------------------
-# インターネットGWの設定
+#--------------------Internet Gateway Configuration--------------------
+#Internet Gateway Configuration
   CfnVPC01IGW:
     Type: AWS::EC2::InternetGateway
     Properties:
@@ -83,7 +83,7 @@ Resources:
         - Key: Name
           Value: CfnVPC01_IGW
 
-# インターネットGWをVPC01にアタッチ
+#Internet Gateway Attachment Configuration
   CfnVPV01IGWAttachment:
     Type: AWS::EC2::VPCGatewayAttachment
     Properties:
@@ -92,8 +92,8 @@ Resources:
       InternetGatewayId:
         Ref: CfnVPC01IGW
 
-#--------------------ルートテーブルの設定--------------------
-#ルートテーブルを定義
+#--------------------RouteTable Configuration--------------------
+#RouteTable Configuration
   PubSubRoute:
     Type: AWS::EC2::RouteTable
     Properties :
@@ -103,7 +103,7 @@ Resources:
         - Key: Name
           Value: RouteTablePublicFromCF
 
-#ルートをVPC01IGW向けに設定
+#Route to CfnVPC01IGW Configuration
   PubSubToIGW:
     Type: AWS::EC2::Route
     Properties: 
@@ -113,7 +113,7 @@ Resources:
       GatewayId:
         Ref: CfnVPC01IGW
 
-#ルートテーブルとパブリックサブネット_1を関連付け
+#PubSub1RouteTableAssociation Configuration
   PubSub1RouteTableAssociation:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
@@ -122,7 +122,7 @@ Resources:
       SubnetId:
         Ref: PublicSubnet1
 
-#ルートテーブルとパブリックサブネット_2を関連付け
+#PubSub2RouteTableAssociation Configuration
   PubSub2RouteTableAssociation:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
@@ -130,3 +130,50 @@ Resources:
         Ref: PubSubRoute
       SubnetId:
         Ref: PublicSubnet2
+
+Outputs:
+#--------------------Output Infomation--------------------
+#CfnVPC01 Logical ID
+  CfnVPC01:
+    Description: VPC ID
+    Value:
+      Ref: CfnVPC01
+    Export:
+      Name:
+        Fn::Sub: "${AWS::StackName}-VPCID"
+
+#PublicSubnet1 Logical ID
+  PublicSubnet1:
+    Description: PublicSubnet1 ID
+    Value:
+      Ref: PublicSubnet1
+    Export:
+      Name:
+        Fn::Sub: "${AWS::StackName}-PrivateSubnet1"
+
+#PrivateSubnet1 Logical ID
+  PrivateSubnet1:
+    Description: PrivateSubnet1 ID
+    Value:
+      Ref: PrivateSubnet1
+    Export:
+      Name:
+        Fn::Sub: "${AWS::StackName}-PublicSubnet1"
+
+#PublicSubnet2 Logical ID
+  PublicSubnet2:
+    Description: PublicSubnet2 ID
+    Value:
+      Ref: PublicSubnet2
+    Export:
+      Name:
+        Fn::Sub: "${AWS::StackName}-PrivateSubnet2"
+
+#PrivateSubnet2 Logical ID
+  PrivateSubnet2:
+    Description: PrivateSubnet2 ID
+    Value:
+      Ref: PrivateSubnet2
+    Export:
+      Name:
+        Fn::Sub: "${AWS::StackName}-PublicSubnet2"
